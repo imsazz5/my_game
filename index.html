@@ -1,83 +1,110 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>Math Quiz for Kids</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background: #f0f8ff;
-            margin-top: 50px;
-        }
-        h1 { color: #333; }
-        #question {
-            font-size: 24px;
-            margin: 20px;
-        }
-        .btn {
-            padding: 15px 25px;
-            margin: 10px;
-            font-size: 18px;
-            background: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-        .btn:hover {
-            background: #45a049;
-        }
-        #score {
-            font-size: 20px;
-            margin-top: 20px;
-        }
-    </style>
+<meta charset="UTF-8">
+<title>Math Quest for Kids</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        background: linear-gradient(#a0e9ff, #fff);
+        margin: 0;
+        padding: 0;
+    }
+    h1 {
+        background: #ff9d76;
+        color: white;
+        padding: 15px;
+        margin: 0;
+    }
+    #question {
+        font-size: 28px;
+        margin: 20px;
+    }
+    .option {
+        display: inline-block;
+        background: #fff;
+        padding: 15px 25px;
+        margin: 10px;
+        border-radius: 10px;
+        border: 2px solid #ccc;
+        cursor: pointer;
+        font-size: 20px;
+        transition: 0.3s;
+    }
+    .option:hover {
+        background: #ffd166;
+    }
+    #score {
+        font-size: 22px;
+        margin-top: 20px;
+    }
+    .correct {
+        background: #06d6a0 !important;
+        color: white;
+    }
+    .wrong {
+        background: #ef476f !important;
+        color: white;
+    }
+</style>
 </head>
 <body>
 
-<h1>Math Quiz for Kids</h1>
+<h1>Math Quest 🧮</h1>
 <div id="question">Loading...</div>
-<div id="answers"></div>
+<div id="options"></div>
 <div id="score">Score: 0</div>
 
 <script>
 let score = 0;
-let num1, num2, correctAnswer;
 
-function newQuestion() {
-    num1 = Math.floor(Math.random() * 10) + 1;
-    num2 = Math.floor(Math.random() * 10) + 1;
-    correctAnswer = num1 + num2;
-    document.getElementById("question").innerText = `${num1} + ${num2} = ?`;
+function generateQuestion() {
+    let num1 = Math.floor(Math.random() * 10) + 1;
+    let num2 = Math.floor(Math.random() * 10) + 1;
+    let operators = ["+", "-", "×"];
+    let operator = operators[Math.floor(Math.random() * operators.length)];
 
-    let answers = [];
-    answers.push(correctAnswer);
-    while (answers.length < 4) {
-        let wrong = Math.floor(Math.random() * 20) + 1;
-        if (!answers.includes(wrong)) answers.push(wrong);
+    let correctAnswer;
+    if (operator === "+") correctAnswer = num1 + num2;
+    if (operator === "-") correctAnswer = num1 - num2;
+    if (operator === "×") correctAnswer = num1 * num2;
+
+    document.getElementById("question").innerHTML = `What is ${num1} ${operator} ${num2}?`;
+
+    let options = [];
+    options.push(correctAnswer);
+
+    // Create 3 random wrong answers
+    while (options.length < 4) {
+        let wrongAnswer = correctAnswer + Math.floor(Math.random() * 10) - 5;
+        if (!options.includes(wrongAnswer) && wrongAnswer >= 0) {
+            options.push(wrongAnswer);
+        }
     }
-    answers.sort(() => Math.random() - 0.5);
 
-    let answerButtons = "";
-    answers.forEach(a => {
-        answerButtons += `<button class="btn" onclick="checkAnswer(${a})">${a}</button>`;
+    // Shuffle answers
+    options.sort(() => Math.random() - 0.5);
+
+    let optionsHTML = "";
+    options.forEach(answer => {
+        optionsHTML += `<div class="option" onclick="checkAnswer(this, ${answer}, ${correctAnswer})">${answer}</div>`;
     });
-    document.getElementById("answers").innerHTML = answerButtons;
+    document.getElementById("options").innerHTML = optionsHTML;
 }
 
-function checkAnswer(selected) {
-    if (selected === correctAnswer) {
+function checkAnswer(element, selected, correct) {
+    if (selected === correct) {
+        element.classList.add("correct");
         score++;
-        alert("✅ Correct!");
     } else {
-        alert("❌ Oops! The correct answer was " + correctAnswer);
+        element.classList.add("wrong");
     }
-    document.getElementById("score").innerText = "Score: " + score;
-    newQuestion();
+    document.getElementById("score").innerHTML = `Score: ${score}`;
+    setTimeout(generateQuestion, 800);
 }
 
-newQuestion();
+generateQuestion();
 </script>
 
 </body>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Math Quiz for Kids</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: #f0f8ff;
+            margin-top: 50px;
+        }
+        h1 { color: #333; }
+        #question {
+            font-size: 24px;
+            margin: 20px;
+        }
+        .btn {
+            padding: 15px 25px;
+            margin: 10px;
+            font-size: 18px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background: #45a049;
+        }
+        #score {
+            font-size: 20px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Math Quiz for Kids</h1>
+<div id="question">Loading...</div>
+<div id="answers"></div>
+<div id="score">Score: 0</div>
+
+<script>
+let score = 0;
+let num1, num2, correctAnswer;
+
+function newQuestion() {
+    num1 = Math.floor(Math.random() * 10) + 1;
+    num2 = Math.floor(Math.random() * 10) + 1;
+    correctAnswer = num1 + num2;
+    document.getElementById("question").innerText = `${num1} + ${num2} = ?`;
+
+    let answers = [];
+    answers.push(correctAnswer);
+    while (answers.length < 4) {
+        let wrong = Math.floor(Math.random() * 20) + 1;
+        if (!answers.includes(wrong)) answers.push(wrong);
+    }
+    answers.sort(() => Math.random() - 0.5);
+
+    let answerButtons = "";
+    answers.forEach(a => {
+        answerButtons += `<button class="btn" onclick="checkAnswer(${a})">${a}</button>`;
+    });
+    document.getElementById("answers").innerHTML = answerButtons;
+}
+
+function checkAnswer(selected) {
+    if (selected === correctAnswer) {
+        score++;
+        alert("✅ Correct!");
+    } else {
+        alert("❌ Oops! The correct answer was " + correctAnswer);
+    }
+    document.getElementById("score").innerText = "Score: " + score;
+    newQuestion();
+}
+
+newQuestion();
+</script>
+
+</body>
+</html>
